@@ -35,6 +35,20 @@ RefluxQueue.prototype.queuedFunc = function (fn) {
     };
 };
 
+/**
+ * @param {Object} actions Result of Reflux.createActions
+ * @return {Object} The same actions, but queued.
+ */
+RefluxQueue.prototype.queueActions = function (actions) {
+    var that = this;
+    var actionNames = Object.getOwnPropertyNames(actions);
+    return actionNames.reduce(function (queued, name) {
+        var fn = actions[name];
+        queued[name] = that.queuedFunc(fn);
+        return queued;
+    }, {});
+};
+
 function dequeue(queue) {
     if (queue.length === 0) return;
     var first = queue[0];
